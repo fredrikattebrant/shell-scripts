@@ -1,0 +1,39 @@
+#!/bin/bash
+# quick hack to recreate 'pcol'
+#
+
+if [ $# -eq 0 ]
+then
+	cat << EOHELP
+
+Usage: pcol [-Fseparator] [column|NF]
+
+	For info on arguments, refer to awk
+	Prints column as indicated by arguments
+	NF = last column on line
+
+EOHELP
+	exit 0
+fi
+
+unset field
+case "$1" in
+	-F*)
+		field="$1"
+		shift
+		;;
+esac
+
+col=$1
+#col=""
+#echo "Args: $@ - col: $col argc: $#"
+#while [ $# -gt 0 ]
+#do
+	#echo "Arg: $1 - col: $col"
+	#col="$col, \$${1}"
+	#shift
+#done
+
+#echo DEBUG: $field "{print \$${col}}"
+awk $field "{print \$${col}}"
+#awk $field "{print \$${col}}"
