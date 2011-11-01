@@ -1,0 +1,7 @@
+#!/bin/ksh
+echo
+echo "		Welcome to think"
+echo "		Just start typing..."
+echo "		Quit with ctrl+d"
+echo ""
+exec cat > /dev/null
