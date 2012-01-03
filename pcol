@@ -1,6 +1,6 @@
 #!/bin/bash
 # quick hack to recreate 'pcol'
-#
+# (c) Fredrik Attebrant 2000-2012
 
 if [ $# -eq 0 ]
 then
