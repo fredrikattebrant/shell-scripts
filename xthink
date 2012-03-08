@@ -1,0 +1,2 @@
+#!/bin/ksh
+exec xterm -fn courb10 -bg black -fg green -e think

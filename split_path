@@ -1,0 +1,10 @@
+#!/bin/bash
+#set -xv
+thepath=${1:-$PATH}
+if [ -n "$BASH" ]; then
+   echo $thepath | sed 's-:-\
+-g'
+else
+	env | grep ^PATH= | sed 's-;-\
+-g'
+fi
