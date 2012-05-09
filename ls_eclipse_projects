@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# (c) Fredrik Attebrant, 2012
+#
+# TODO: Add support for regular ls options
+#
+
+function do_list_projects_for_a_workspace
+{
+if [ "$1" != "" ]
+then
+	workspace="$1"
+else 
+	workspace="."
+fi
+
+ls "$workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/"
+}
+
+IFS="
+"
+for d in "$@"
+do
+	echo "$d:"
+	do_list_projects_for_a_workspace "$d"
+	echo ""
+done
