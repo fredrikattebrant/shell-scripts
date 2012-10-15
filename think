@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 echo
 echo "		Welcome to think - the throwaway notepad"
 echo "		Just start typing...    Quit with ctrl+d"
