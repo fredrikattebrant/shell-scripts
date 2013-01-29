@@ -1,0 +1,20 @@
+! 
+! Copy to $HOME/.Xdefaults
+! To load, run: xrdb $HOME/.Xdefaults
+!
+XTerm*reverseVideo:             true
+!XTerm*background:               black
+!XTerm*foreground:               white
+XTerm*scrollBar:                true
+XTerm*VT100*geometry:           80x40
+XTerm*saveLines:                1024
+XTerm*font:                     6x13
+XTerm*autoWrap:                 True
+
+!Emacs*geometry:                 80x60-7+0
+Emacs.geometry:                 100x60-7-10
+Emacs*bitmapIcon:               on
+Emacs*fontList:                 6x13*
+!Emacs*background:               lightgray
+!Emacs*foreground:               black
+Emacs*font:                     6x13
