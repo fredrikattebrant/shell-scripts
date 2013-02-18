@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+# compares the given branch with its remote
+#
+# Usage: $(basename $0) branch
+#
+
+branch="$1"
+
+if [ -z "$1" ]
+then
+	branch="$(git branch| grep '*'| pcol NF)"
+fi
+
+echo ""
+echo "Comparing branch $branch with remotes/origin/$branch:"
+echo ""
+
+git diff --name-only "$branch"..remotes/origin/"$branch"
+
