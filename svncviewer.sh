@@ -33,6 +33,14 @@ do
 		host=ok
 		shift
 		;;
+	-?)
+		cat << EOHELP
+Usage: $(basename 0) [-h host] [timeout (e.g. 30)] [-p ssh_port] [-u username] [user@hostname]
+       Note: Use either "user@hostname" or "-h hostname -u user"
+
+EOHELP
+		exit 0
+		;;
 	*)
 		echo "!!! skipping: $1"
 		shift
@@ -52,10 +60,19 @@ then
 	remote="$user@$host"
 fi
 
-echo Attempting to connect VNC to $host
+echo Attempting to connect VNC to $remote
 echo Connection timeout: $timeout
 xterm -title "Connect ssh tunnel for VNCviewer" -e ssh -C -N -L 5902:localhost:5901 -p $port $remote &
-sleep $timeout
+#sleep $timeout
+let t=0
+while [ $t -lt $timeout ]
+do
+	echo -n "."
+	sleep 1
+	let t=t+1
+done
+echo 
+echo "Launching vncviewer"
 #$HOME/bin/vncviewer localhost:5902
 #vncviewer /fullscreen localhost:5902
 vncviewer localhost:5902
