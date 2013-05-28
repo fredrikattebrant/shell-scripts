@@ -1,13 +1,15 @@
 #!/bin/bash
 # quick hack to recreate 'pcol'
-# (c) Fredrik Attebrant 2000-2012
+# (c) Fredrik Attebrant 2000-2013
 
 if [ $# -eq 0 ]
 then
 	cat << EOHELP
 
-Usage: pcol [-Fseparator] [column|NF]
+Usage: pcol [-Fseparator] [column(s)|NF]
 
+        For multiple columns, separate with space, e.g.:
+        $ pcol 1 5 20
 	For info on arguments, refer to awk
 	Prints column as indicated by arguments
 	NF = last column on line
@@ -24,16 +26,21 @@ case "$1" in
 		;;
 esac
 
-col=$1
-#col=""
+#col=$1
+col=""
 #echo "Args: $@ - col: $col argc: $#"
-#while [ $# -gt 0 ]
-#do
-	#echo "Arg: $1 - col: $col"
-	#col="$col, \$${1}"
-	#shift
-#done
+while [ $# -gt 0 ]
+do
+    if [ -z "$col" ]
+    then
+        col="\$${1}"
+    else
+	col="$col, \$${1}"
+    fi
+    #echo "Arg: $1 - col: $col"
+    shift
+done
 
-#echo DEBUG: $field "{print \$${col}}"
-awk $field "{print \$${col}}"
+#echo DEBUG: $field "{print ${col}}"
+awk $field "{print ${col}}"
 #awk $field "{print \$${col}}"
