@@ -9,7 +9,7 @@ timeout=10
 
 while [ $# -gt 0 ]
 do
-  echo "Args: $@"
+  #echo "Args: $@"
   case "$1" in
 	[1-9]*)
 		timeout=$1
@@ -35,7 +35,7 @@ do
 		;;
 	-?)
 		cat << EOHELP
-Usage: $(basename 0) [-h host] [timeout (e.g. 30)] [-p ssh_port] [-u username] [user@hostname]
+Usage: $(basename $0) [-h host] [timeout (e.g. 30)] [-p ssh_port] [-u username] [user@hostname]
        Note: Use either "user@hostname" or "-h hostname -u user"
 
 EOHELP
@@ -62,7 +62,7 @@ fi
 
 echo Attempting to connect VNC to $remote
 echo Connection timeout: $timeout
-xterm -title "Connect ssh tunnel for VNCviewer" -e ssh -C -N -L 5902:localhost:5901 -p $port $remote &
+xterm -geometry 50x10  -title "Connect ssh tunnel for VNCviewer" -e ssh -C -N -L 5902:localhost:5901 -p $port $remote &
 #sleep $timeout
 let t=0
 while [ $t -lt $timeout ]
