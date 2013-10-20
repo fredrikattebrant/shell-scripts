@@ -7,6 +7,17 @@ port=22
 remote=NONE
 timeout=10
 
+#Determine VNC viewer executable
+case "$(uname -s)" in
+	"Darwin")
+		VNCVIEWER="/Applications/Utilities/Chicken.app/Contents/MacOS/Chicken"
+		;;
+	*)
+		# Default: viewer on PATH:
+		VNCVIEWER="vncviewer"
+		;;
+esac
+
 while [ $# -gt 0 ]
 do
   #echo "Args: $@"
@@ -75,4 +86,4 @@ echo
 echo "Launching vncviewer"
 #$HOME/bin/vncviewer localhost:5902
 #vncviewer /fullscreen localhost:5902
-vncviewer localhost:5902
+"$VNCVIEWER" localhost:5902
