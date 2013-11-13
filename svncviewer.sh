@@ -3,7 +3,9 @@
 
 user=NONE
 host=NONE
+geometry=""
 port=22
+reconnect=NO
 remote=NONE
 timeout=10
 
@@ -30,9 +32,17 @@ do
 		host=$2
 		shift 2
 		;;
+        -g*)
+                geometry="-geometry $2"
+                shift 2
+                ;;
 	-p*)
 		port=$2
 		shift 2
+		;;
+	-r*)
+                reconnect=YES
+		shift 1
 		;;
 	-u*)
 		user=$2
@@ -46,8 +56,15 @@ do
 		;;
 	-?)
 		cat << EOHELP
-Usage: $(basename $0) [-h host] [timeout (e.g. 30)] [-p ssh_port] [-u username] [user@hostname]
-       Note: Use either "user@hostname" or "-h hostname -u user"
+Usage: 
+  To setup ssh tunnel and launch VNC, use one of:
+    $(basename $0) [-h host] [-u username] [-g geometry] [timeout (e.g. 30)] [-p ssh_port]
+    $(basename $0) [-g geometry] [timeout (e.g. 30)] [-p ssh_port] [user@hostname]
+
+  To reconnect VNC using an existing ssh tunnel:
+    $(basename $0) -r[econnect]
+
+  Note: Use either "user@hostname" or "-h hostname -u user"
 
 EOHELP
 		exit 0
@@ -59,10 +76,19 @@ EOHELP
   esac
 done
 
+if [ "$reconnect" = "YES" ]
+then 
+    "$VNCVIEWER" $geometry localhost:5902
+    exit 0
+fi
+
 if [ "$host" = "NONE" -o "$user" = "NONE" ]
 then
 	echo "*** You must supply a host with -h hostname"
 	echo "*** and a user with -u username"
+        echo ""
+        echo "$(basename $0) -? will print help"
+        echo ""
 	exit 1
 fi
 
@@ -86,4 +112,4 @@ echo
 echo "Launching vncviewer"
 #$HOME/bin/vncviewer localhost:5902
 #vncviewer /fullscreen localhost:5902
-"$VNCVIEWER" localhost:5902
+"$VNCVIEWER" $geometry localhost:5902
