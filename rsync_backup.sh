@@ -4,13 +4,13 @@
 # source: http://www.howtogeek.com/175008/the-non-beginners-guide-to-syncing-data-with-rsync/
 # 
 
-BACKUPDIR_LOCAL=$BACKUPDIR
+BACKUPDIR_LOCAL=$HOME/backup
 BACKUPDIR_REMOTE=/media/RemoteFilesAttebrant
 REMOTE_USER=fredrik
 REMOTE_HOST=romale.asuscomm.com
 
 #copy old time.txt to time2.txt
-yes | cp $BACKUPDIR_LOCAL/time.txt $BACKUPDIR_LOCAL/time2.txt
+cp $BACKUPDIR_LOCAL/time.txt $BACKUPDIR_LOCAL/time2.txt
 
 #overwrite old time.txt file with new time
 echo $(date +”%F-%I%p”) > $BACKUPDIR_LOCAL/time.txt
