@@ -5,6 +5,11 @@
 # 
 set -xv
 
+#
+# setup the ssh-agent connection:
+. $HOME/git/shell-scripts/ssh-agent-check-and-run.sh
+
+
 BACKUPDIR_LOCAL=$HOME/backup/test
 BACKUPDIR_REMOTE=/media/RemoteFilesAttebrant/backup/test
 REMOTE_USER=fredrik
