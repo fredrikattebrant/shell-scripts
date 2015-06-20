@@ -5,8 +5,8 @@
 # 
 set -xv
 
-BACKUPDIR_LOCAL=$HOME/backup/test/
-BACKUPDIR_REMOTE=/media/RemoteFilesAttebrant/backup/test/
+BACKUPDIR_LOCAL=$HOME/backup/test
+BACKUPDIR_REMOTE=/media/RemoteFilesAttebrant/backup/test
 REMOTE_USER=fredrik
 REMOTE_HOST=romale.asuscomm.com
 REMOTE_PORT=31700
@@ -29,5 +29,5 @@ rsync -avzhPR --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r --delete \
 
 #dont forget to scp the log file and put it with the backup
 scp -P $REMOTE_PORT $BACKUPDIR_LOCAL/rsync-${BACKUP_TIME}.log \
-  $REMOTE_USER@$REMOTE_HOST:$BACKUPDIR_REMOTE/${BACKUP_TIME}/
+  $REMOTE_USER@$REMOTE_HOST:$BACKUPDIR_REMOTE/${BACKUP_TIME}/rsync-${BACKUP_TIME}.log
 
