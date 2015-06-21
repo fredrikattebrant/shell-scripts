@@ -3,15 +3,15 @@
 # rsync backup script
 # source: http://www.howtogeek.com/175008/the-non-beginners-guide-to-syncing-data-with-rsync/
 # 
-set -xv
+#set -xv
 
 #
 # setup the ssh-agent connection:
 . $HOME/git/shell-scripts/ssh-agent-check-and-run.sh
 
 
-BACKUPDIR_LOCAL=$HOME/backup/test
-BACKUPDIR_REMOTE=/media/RemoteFilesAttebrant/backup/test
+BACKUPDIR_LOCAL=${1:-$HOME/backup}
+BACKUPDIR_REMOTE=/media/RemoteFilesAttebrant/backup
 REMOTE_USER=fredrik
 REMOTE_HOST=romale.asuscomm.com
 REMOTE_PORT=31700
@@ -20,7 +20,7 @@ REMOTE_PORT=31700
 cp $BACKUPDIR_LOCAL/time.txt $BACKUPDIR_LOCAL/time2.txt
 
 #overwrite old time.txt file with new time
-BACKUP_TIME=$(date +%F-%I%p)
+BACKUP_TIME=$(date +%F-%H%M)
 echo $BACKUP_TIME > $BACKUPDIR_LOCAL/time.txt
 
 #make the log file
@@ -29,6 +29,7 @@ echo $BACKUP_TIME > $BACKUPDIR_LOCAL/time.txt
 #rsync command
 rsync -avzhPR --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r --delete \
   --stats --log-file=$BACKUPDIR_LOCAL/rsync-${BACKUP_TIME}.log \
+  --exclude-from "$BACKUPDIR_LOCAL/config/exclude.txt" \
   --link-dest=$BACKUPDIR_REMOTE/${BACKUP_TIME} \
   -e "ssh -p $REMOTE_PORT" $BACKUPDIR_LOCAL $REMOTE_USER@$REMOTE_HOST:$BACKUPDIR_REMOTE/${BACKUP_TIME}/
 
