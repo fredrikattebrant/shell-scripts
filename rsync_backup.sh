@@ -24,7 +24,7 @@ BACKUP_TIME=$(date +%F-%H%M)
 echo $BACKUP_TIME > $BACKUPDIR_LOCAL/time.txt
 
 #make the log file
-> $BACKUPDIR_LOCAL/rsync-$(date +%F-%I%p).log
+> $BACKUPDIR_LOCAL/rsync-${BACKUP_TIME}.log
 
 #rsync command
 rsync -avzhPR --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r --delete \
