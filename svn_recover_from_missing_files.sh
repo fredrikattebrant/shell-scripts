@@ -9,11 +9,19 @@
 #
 
 dryrun=false
+verbose=false
 
 function usage {
 cat << EOH
-Usage: $(basename $0) [-dry[run]] path_to_svn_folder
+Usage: $(basename $0) [-dry[run]] [-verbose] path_to_svn_folder
 EOH
+}
+
+function printMissing {
+	echo "Found the following missing files:"
+	echo
+	cat MISSING.txt
+	echo
 }
 
 while [ $# -gt 0 ]
@@ -27,6 +35,10 @@ do
       usage
       exit 0
       ;;
+	-verbose)
+	  verbose=true
+	  shift
+	  ;;
     *)
       break
     esac
@@ -48,6 +60,10 @@ then
 	exit 0
 fi
 echo "Found: ${filecount} missing files"
+if [ "$verbose" = "true" ]
+then
+	printMissing
+fi
 
 if [ "$dryrun" = "false" ]
 then
@@ -63,4 +79,5 @@ then
   svn status $svnfolder
 else
   echo "Only a dryrun - nothing changed."
+  rm MISSING.txt
 fi
