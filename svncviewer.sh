@@ -7,12 +7,12 @@ geometry=""
 port=22
 reconnect=NO
 remote=NONE
-timeout=10
+timeout=15
 
 #Determine VNC viewer executable
 case "$(uname -s)" in
 	"Darwin")
-		VNCVIEWER="/Applications/Utilities/Chicken.app/Contents/MacOS/Chicken"
+		VNCVIEWER="/Applications/Chicken.app/Contents/MacOS/Chicken"
 		;;
 	*)
 		# Default: viewer on PATH:
