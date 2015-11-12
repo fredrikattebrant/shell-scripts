@@ -27,6 +27,13 @@ echo $BACKUP_TIME > $BACKUPDIR_LOCAL/time.txt
 > $BACKUPDIR_LOCAL/rsync-${BACKUP_TIME}.log
 
 #rsync command
+# robban:
+# rsync -avhP --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r --delete \
+#  --stats --log-file=/home/Robert/backup/rsync-`date +%F-%I%p`.log \
+#  --exclude-from ~/exclude.txt \
+#  --link-dest=/home/robert/backup/`cat ~/backup/time2.txt` \
+#  -e 'ssh -p 4639' /media/LocalFilesEriksson/Files robert@kfdd.mine.nu:/home/robert/backup/`date +%F-%I%p`/
+
 rsync -avzhPR --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r --delete \
   --stats --log-file=$BACKUPDIR_LOCAL/rsync-${BACKUP_TIME}.log \
   --exclude-from "$BACKUPDIR_LOCAL/config/exclude.txt" \
