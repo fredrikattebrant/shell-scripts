@@ -10,6 +10,7 @@
 
 dryrun=false
 verbose=false
+missingfiles=MISSING.txt.$$
 
 function usage {
 cat << EOH
@@ -20,7 +21,7 @@ EOH
 function printMissing {
 	echo "Found the following missing files:"
 	echo
-	cat MISSING.txt
+	cat $missingfiles
 	echo
 }
 
@@ -52,11 +53,12 @@ else
   svnfolder="$1"
 fi
 
-svn status $svnfolder | grep '^! ' | awk '{print $2}' | sed 's-\\-/-g' > MISSING.txt
-filecount=$(cat MISSING.txt | wc -l)
+svn status $svnfolder | grep '^! ' | awk '{print $2}' | sed 's-\\-/-g' > $missingfiles
+filecount=$(cat $missingfiles | wc -l)
 if [ $filecount -eq 0 ]
 then
 	echo "Found no missing files"
+	rm $missingfiles
 	exit 0
 fi
 echo "Found: ${filecount} missing files"
@@ -67,17 +69,17 @@ fi
 
 if [ "$dryrun" = "false" ]
 then
-  echo "Reverting $(cat MISSING.txt | xargs echo) ..."
-  cat MISSING.txt | xargs svn revert
-  echo "Deleting $(cat MISSING.txt | xargs echo) ..."
-  cat MISSING.txt | xargs svn delete
+  echo "Reverting $(cat$missingfiles | xargs echo) ..."
+  cat $missingfiles | xargs svn revert
+  echo "Deleting $(cat $missingfiles | xargs echo) ..."
+  cat $missingfiles | xargs svn delete
   echo "Cleaning up ..."
-  rm MISSING.txt
+  rm $missingfiles
   echo "Done."
   echo ""
   echo "svn status:"
   svn status $svnfolder
 else
   echo "Only a dryrun - nothing changed."
-  rm MISSING.txt
+  rm $missingfiles
 fi
