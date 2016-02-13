@@ -2,46 +2,51 @@
 #
 # rsync backup script
 # source: http://www.howtogeek.com/175008/the-non-beginners-guide-to-syncing-data-with-rsync/
-# 
+#
 #set -xv
 
-#
-# setup the ssh-agent connection:
 . $HOME/git/shell-scripts/ssh-agent-check-and-run.sh
 
+MAILADDRESS=fredrik.attebrant@gmail.com
 
-BACKUPDIR_LOCAL=${1:-$HOME/backup}
-BACKUPDIR_REMOTE=/media/RemoteFilesAttebrant/backup
-REMOTE_USER=fredrik
-REMOTE_HOST=romale.asuscomm.com
-REMOTE_PORT=31700
+#BACKUP_PATH=backup/test/
+BACKUP_PATH=backup/
+BACKUP_ROOT=$HOME/$BACKUP_PATH
+BACKUP_REMOTE=/media/RemoteFilesAttebrant/$BACKUP_PATH
+
+TIMEFILE=$BACKUP_ROOT/time.txt
+TIMEFILE2=$(echo $TIMEFILE | sed 's-time-time2-')
+datetime=$(date +"%F-%H%M%S.%N")
+
+LOGFILE=$BACKUP_ROOT/rsync-${datetime}.log
+EXCLUDEFILE=$BACKUP_ROOT/config/exclude.txt
 
 #copy old time.txt to time2.txt
-cp $BACKUPDIR_LOCAL/time.txt $BACKUPDIR_LOCAL/time2.txt
+yes | cp $TIMEFILE $TIMEFILE2
 
 #overwrite old time.txt file with new time
-BACKUP_TIME=$(date +%F-%H%M)
-echo $BACKUP_TIME > $BACKUPDIR_LOCAL/time.txt
+echo $datetime > $TIMEFILE
 
 #make the log file
-> $BACKUPDIR_LOCAL/rsync-${BACKUP_TIME}.log
+echo "Creating; $LOGFILE"
+echo "" > $LOGFILE
 
 #rsync command
-# robban:
-# rsync -avhP --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r --delete \
-#  --stats --log-file=/home/Robert/backup/rsync-`date +%F-%I%p`.log \
-#  --exclude-from ~/exclude.txt \
-#  --link-dest=/home/robert/backup/`cat ~/backup/time2.txt` \
-#  -e 'ssh -p 4639' /media/LocalFilesEriksson/Files robert@kfdd.mine.nu:/home/robert/backup/`date +%F-%I%p`/
+rsync -avzhPR \
+  --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r \
+  --delete \
+  --stats \
+  --log-file=$LOGFILE \
+  --exclude-from $EXCLUDEFILE \
+  --link-dest=/media/RemoteFilesAttebrant/backup/test/`cat ~/backup/test/time2.txt` \
+  -e 'ssh -p 31700' $BACKUP_ROOT fredrik@romale.asuscomm.com:$BACKUP_REMOTE/${datetime}/
 
-rsync -avzhPR --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r --delete \
-  --stats --log-file=$BACKUPDIR_LOCAL/rsync-${BACKUP_TIME}.log \
-  --exclude-from "$BACKUPDIR_LOCAL/config/exclude.txt" \
-  --link-dest=$BACKUPDIR_REMOTE/${BACKUP_TIME} \
-  -e "ssh -p $REMOTE_PORT" $BACKUPDIR_LOCAL $REMOTE_USER@$REMOTE_HOST:$BACKUPDIR_REMOTE/${BACKUP_TIME}/
+#don't forget to scp the log file and put it with the backup
 
-###  --exclude-from '~/exclude.txt' --link-dest=$BACKUPDIR_REMOTE/$(cat $BACKUPDIR_LOCAL/time2.txt) \
-#dont forget to scp the log file and put it with the backup
-scp -P $REMOTE_PORT $BACKUPDIR_LOCAL/rsync-${BACKUP_TIME}.log \
-  $REMOTE_USER@$REMOTE_HOST:$BACKUPDIR_REMOTE/${BACKUP_TIME}/rsync-${BACKUP_TIME}.log
+scp -P 31700 \
+  $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log \
+  fredrik@romale.asuscomm.com:$BACKUP_REMOTE/`cat $BACKUP_ROOT/time.txt`/rsync-`cat $BACKUP_ROOT/time.txt`.log
+
+# done
+echo "Backup complete at: $(date)" | mailx -s "Backup complete" $MAILADDRESS
 
