@@ -38,7 +38,7 @@ rsync -avzhPR \
   --stats \
   --log-file=$LOGFILE \
   --exclude-from $EXCLUDEFILE \
-  --link-dest=/media/RemoteFilesAttebrant/backup/test/`cat ~/backup/test/time2.txt` \
+  --link-dest=$BACKUP_REMOTE/`cat $BACKUP_ROOT/time2.txt` \
   -e 'ssh -p 31700' $BACKUP_ROOT fredrik@romale.asuscomm.com:$BACKUP_REMOTE/${datetime}/
 
 #don't forget to scp the log file and put it with the backup
@@ -48,5 +48,6 @@ scp -P 31700 \
   fredrik@romale.asuscomm.com:$BACKUP_REMOTE/`cat $BACKUP_ROOT/time.txt`/rsync-`cat $BACKUP_ROOT/time.txt`.log
 
 # done
-echo "Backup complete at: $(date)" | mailx -s "Backup complete" $MAILADDRESS
+tail -13 $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log | mailx -s "Backup ended at: $(date)" $MAILADDRESS
 
+###
