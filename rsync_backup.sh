@@ -48,6 +48,16 @@ scp -P 31700 \
   fredrik@romale.asuscomm.com:$BACKUP_REMOTE/`cat $BACKUP_ROOT/time.txt`/rsync-`cat $BACKUP_ROOT/time.txt`.log
 
 # done
-tail -13 $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log | mailx -s "Backup ended at: $(date)" $MAILADDRESS
+#tail -13 $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log | mailx -s "Backup ended at: $(date)" $MAILADDRESS
 
-###
+### Report backup status:
+backupstatus="$(tail -13 $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log)"
+echo $backupstatus | mailx -s "Backup ended at: $(date)" $MAILADDRESS
+
+### Send status to Slack:
+export SLACK_TOKEN="$(cat $HOME/.slacktoken)"
+slackmsg="Backup complete at $(date +"%F-%H%M%S) \`\`\`
+  $backupstatus \`\`\`" 
+echo $slackmsg | slacker -c backups 
+
+### END ###
