@@ -17,7 +17,7 @@ launch_agent() {
     #echo ssh-agent environment:
     #echo $output
     eval $output
-    echo "Login to the agent (PID=$SSH_AGENT_PID) - use the SSH (not Windows) password" 
+    echo "Login to the agent (PID=$SSH_AGENT_PID) - use the SSH (not operating system) password" 
     ssh-add
 }
 
