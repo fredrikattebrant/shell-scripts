@@ -9,7 +9,7 @@ BACKUPDIR=/Volumes/Bilder/Vart_Photos_Library.photoslibrary/
 REMOTEDIR=backup/Bilder/Vart_Photos_Library.photoslibrary/
 
 REMOTEPORT=4639
-REMOTEHOME=/home
+REMOTEHOMEDIR=home
 REMOTEUSER=fxo
 REMOTEHOST=192.168.0.250
 
@@ -53,7 +53,7 @@ tail -13 $LOG > $TEMPSTATUS
 slackit "Backup from texas to kfdd done: ${DATETIME}" $TEMPSTATUS
 
 # start backup on texas
-echo $REMOTEHOME/home/$REMOTEUSER/bin/rsync_backup.sh | ssh -p $REMOTEPORT $REMOTEUSER@$REMOTEHOST at now +1 minutes
+echo /$REMOTEHOMEDIR/$REMOTEUSER/bin/rsync_backup.sh | ssh -p $REMOTEPORT $REMOTEUSER@$REMOTEHOST at now +1 minutes
 
 slackit "Backup scheduled on kfdd"
 
