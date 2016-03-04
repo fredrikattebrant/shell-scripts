@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# setup PATH to include slacker:
+PATH=$PATH:/usr/local/bin
+
 #BACKUPDIR=/Users/fredrik/tmp
 #REMOTEDIR=backup/test/texas.bilder.vart
 BACKUPDIR=/Volumes/Bilder/Vart_Photos_Library.photoslibrary/
