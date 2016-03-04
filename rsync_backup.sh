@@ -7,7 +7,10 @@
 
 . $HOME/git/shell-scripts/ssh-agent-check-and-run.sh
 
+PATH=$PATH:/usr/local/bin
+
 MAILADDRESS=fredrik.attebrant@gmail.com
+SLACK_USER=kfdd
 
 #BACKUP_PATH=backup/test/
 BACKUP_PATH=backup/
@@ -20,6 +23,25 @@ datetime=$(date +"%F-%H%M%S.%N")
 
 LOGFILE=$BACKUP_ROOT/rsync-${datetime}.log
 EXCLUDEFILE=$BACKUP_ROOT/config/exclude.txt
+
+### Functions
+#
+# slackit "Message text" file_with_path
+#
+function slackit
+{
+  # slack the status
+  export SLACK_TOKEN="$(cat $HOME/.slacktoken)"
+  if [ $# -eq 2 ]
+  then
+    echo "$1 \`\`\`$(cat $2)\`\`\`" | slacker -c backups -n $SLACKER_USER
+  else
+    echo "$1" | slacker -c backups -n $SLACKER_USER
+  fi
+}
+
+### MAIN ###
+slackit "Starting backup on \`kfdd\` to \`romale.asuscomm.com\`"
 
 #copy old time.txt to time2.txt
 yes | cp $TIMEFILE $TIMEFILE2
@@ -42,7 +64,6 @@ rsync -avzhPR \
   -e 'ssh -p 31700' $BACKUP_ROOT fredrik@romale.asuscomm.com:$BACKUP_REMOTE/${datetime}/
 
 #don't forget to scp the log file and put it with the backup
-
 scp -P 31700 \
   $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log \
   fredrik@romale.asuscomm.com:$BACKUP_REMOTE/`cat $BACKUP_ROOT/time.txt`/rsync-`cat $BACKUP_ROOT/time.txt`.log
@@ -51,13 +72,10 @@ scp -P 31700 \
 #tail -13 $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log | mailx -s "Backup ended at: $(date)" $MAILADDRESS
 
 ### Report backup status:
-backupstatus="$(tail -13 $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log)"
-echo $backupstatus | mailx -s "Backup ended at: $(date)" $MAILADDRESS
-
-### Send status to Slack:
-export SLACK_TOKEN="$(cat $HOME/.slacktoken)"
-slackmsg="Backup complete at $(date +"%F-%H%M%S) \`\`\`
-  $backupstatus \`\`\`" 
-echo $slackmsg | slacker -c backups 
+TEMPSTATUS=/tmp/$(basename $0).$$
+tail -13 $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log) > $TEMPSTATUS
+cat $TEMPSTATUS | mailx -s "Backup ended at: $(date)" $MAILADDRESS
+slackit "Backup complete at $(date +"%F-%H%M%S)" $TEMPSTATUS 
+echo Would rm $TEMPSTATUS
 
 ### END ###
