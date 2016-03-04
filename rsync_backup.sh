@@ -10,7 +10,7 @@
 PATH=$PATH:/usr/local/bin
 
 MAILADDRESS=fredrik.attebrant@gmail.com
-SLACK_USER=kfdd
+SLACKER_USER=kfdd
 
 #BACKUP_PATH=backup/test/
 BACKUP_PATH=backup/
@@ -73,9 +73,9 @@ scp -P 31700 \
 
 ### Report backup status:
 TEMPSTATUS=/tmp/$(basename $0).$$
-tail -13 $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log) > $TEMPSTATUS
+tail -13 $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log > $TEMPSTATUS
 cat $TEMPSTATUS | mailx -s "Backup ended at: $(date)" $MAILADDRESS
-slackit "Backup complete at $(date +"%F-%H%M%S)" $TEMPSTATUS 
+slackit "Backup complete at $(date +%F-%H%M%S)" $TEMPSTATUS 
 echo Would rm $TEMPSTATUS
 
 ### END ###
