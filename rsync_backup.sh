@@ -76,6 +76,6 @@ TEMPSTATUS=/tmp/$(basename $0).$$
 tail -13 $BACKUP_ROOT/rsync-`cat $BACKUP_ROOT/time.txt`.log > $TEMPSTATUS
 cat $TEMPSTATUS | mailx -s "Backup ended at: $(date)" $MAILADDRESS
 slackit "Backup from kfdd to romale complete at $(date +%F-%H%M%S)" $TEMPSTATUS 
-echo Would rm $TEMPSTATUS
+rm $TEMPSTATUS
 
 ### END ###
