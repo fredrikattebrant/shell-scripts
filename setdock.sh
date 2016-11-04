@@ -10,6 +10,7 @@ caller=$(basename $0 .sh)
 
 #echo Switching to: $caller >> ~/tmp/controlplane.log
 
+
 LIB=$HOME/Library/Preferences
 DIR=$HOME/Documents/macos/DockConfigurations
 DOCKPLIST=com.apple.dock.plist
@@ -18,6 +19,22 @@ DOCKPLIST=com.apple.dock.plist
 DUAL=com.apple.dock.mpb+p2715q.plist
 DESKTOP=com.apple.dock.p2715q.plist
 MACBOOK=com.apple.dock.mpb.plist
+
+# check previous state - do we need to act?
+STATEFILE=$HOME/.setdock
+
+if [ -w $STATEFILE ]
+then
+  PREVIOUS_STATE="$(cat $STATEFILE)"
+  if [ "$PREVIOUS_STATE" == "$caller" ]
+  then
+    # no change - do nothing
+    exit 0
+  fi
+fi
+
+# record the new state
+echo "$caller" > $STATEFILE
 
 case "$caller" in
     "setdock_extended")
