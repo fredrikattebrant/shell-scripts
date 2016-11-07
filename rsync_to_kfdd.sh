@@ -52,7 +52,7 @@ rsync -avzR \
 tail -13 $LOG > $TEMPSTATUS
 slackit "Backup from texas to kfdd done: ${DATETIME}" $TEMPSTATUS
 
-# start backup on texas
+# start backup on the remote host
 echo /$REMOTEHOMEDIR/$REMOTEUSER/bin/rsync_backup.sh | ssh -p $REMOTEPORT $REMOTEUSER@$REMOTEHOST at now +1 minutes
 
 slackit "Backup scheduled on kfdd"
