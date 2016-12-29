@@ -37,6 +37,14 @@ function slackit
 
 ### MAIN ###
 #
+
+# run even weeks only:
+week=$(date +%U)
+if [ $(($week % 2)) != 0 ]; then 
+    slackit "odd week - skipping backup"
+    exit 0
+fi
+
 # go to the root of the source dir:
 cd $BACKUPDIR
 
