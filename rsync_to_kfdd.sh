@@ -48,7 +48,7 @@ rsync -avzR \
   -e "ssh -p $REMOTEPORT" . $REMOTEUSER@$REMOTEHOST:$REMOTEDIR
 
 
-# send email report
+# slack a report
 tail -13 $LOG > $TEMPSTATUS
 slackit "Backup from texas to kfdd done: ${DATETIME}" $TEMPSTATUS
 
