@@ -38,6 +38,8 @@ function slackit
 ### MAIN ###
 #
 
+echo "Starting backup at: $DATETIME"
+
 # run even weeks only:
 week=$(date +%U)
 if [ $(($week % 2)) != 0 ]; then 
