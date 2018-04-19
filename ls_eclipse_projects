@@ -2,26 +2,78 @@
 #
 # (c) Fredrik Attebrant, 2012
 #
-# TODO: Add support for regular ls options
+# TODO: Add support for additional ls options
 #
+function usage
+{
+  cat << EOHELP
+Usage: 
+
+$(basename $0) [-l] dirs
+
+  -l    Long listing similar to: ls -l
+  dirs  One or more Eclipse workspace directories
+  
+EOHELP
+}
+
+function do_long_list
+{
+  path="$1/.metadata/.plugins/org.eclipse.core.resources/.projects/"
+  for project in $(ls "$path")
+  do
+    echo -n " $project => "
+    strings  "$path/$project/.location" | grep URI//file | awk -F"file:" "{print \$2}"
+  done
+}
+
+function do_short_list
+{
+  ls "$1/.metadata/.plugins/org.eclipse.core.resources/.projects/"
+}
 
 function do_list_projects_for_a_workspace
 {
-if [ "$1" != "" ]
-then
-	workspace="$1"
-else 
-	workspace="."
-fi
+  do_list=do_short_list
+  if [ "$1" == "-l" ]
+  then
+    do_list=do_long_list
+    shift
+  fi
+  if [ "$1" != "" ]
+  then
+    workspace="$1"
+  else 
+    workspace="."
+  fi
 
-ls "$workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/"
+  eval $do_list $workspace
 }
+
+# Parse arguments
+LONG=""
+while [ $# -gt 0 ]
+do
+  case "$1" in
+    -l)
+      LONG=-l
+      shift
+      ;;
+      -*)
+      usage
+      exit 0
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
 
 IFS="
 "
 for d in "$@"
 do
-	echo "$d:"
-	do_list_projects_for_a_workspace "$d"
-	echo ""
+  echo "$d:"
+  do_list_projects_for_a_workspace $LONG "$d"
+  echo ""
 done
