@@ -23,7 +23,12 @@ function do_long_list
   for project in $(ls "$path")
   do
     echo -n " $project => "
-    strings  "$path/$project/.location" | grep URI//file | awk -F"file:" "{print \$2}"
+	if [ -f "$path/$project/.location" ]
+	then
+		strings  "$path/$project/.location" | grep URI//file | awk -F"file:" "{print \$2}"
+	else
+		echo "$1/$project"
+	fi
   done
 }
 
