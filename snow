@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# From: http://climagic.org/coolstuff/let-it-snow.html
+#
 LINES=$(stty size| pcol 1)
 COLUMNS=$(stty size| pcol 2)
 
