@@ -1,0 +1,24 @@
+git push origin HEAD:refs/for/feature/<branch>
+
+# update from develop:
+git merge --no-ff [--no-commit] origin/develop
+
+Use commit message: "Merge 'origin/develop'"
+
+# 'rebase' current branch from origin (remote):
+git stash save <name>
+git fetch --prune
+git pull --rebase
+
+
+# Create a work-in-progress change:
+$ git push origin HEAD:refs/for/<insert-your-branch>%wip
+
+# Mark a work-in-progress change as ready for review:
+$ git push origin HEAD:refs/for/<insert-your-branch>%ready
+
+# Create a private change:
+$ git push origin HEAD:refs/for/<insert-your-branch>%private
+
+# List commits made on current branch (some noise may occur):
+git log --oneline --first-parent --no-merges
