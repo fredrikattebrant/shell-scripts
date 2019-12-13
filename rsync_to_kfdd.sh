@@ -38,6 +38,12 @@ function slackit
 ### MAIN ###
 #
 
+if [ ! -r $BACKUPDIR ]
+then
+  slackit "Aborting backup - Backup dir missing: $BACKUPDIR"
+  exit 1
+fi
+
 echo "Starting backup at: $DATETIME"
 
 # run even weeks only:
