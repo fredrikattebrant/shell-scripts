@@ -14,6 +14,10 @@ verbose=""
 while [ $# -gt 0 ]
 do
   case "$1" in
+    -a*)
+      all="true"
+      shift
+      ;;
     -v*)
       verbose="true"
       shift
@@ -30,6 +34,12 @@ PATH=/opt/homebrew/bin:/usr/local/bin:$PATH
 touch $LAST_JIRA_VERSION_FILE # create if missing
 
 CURRENT_JIRA_SOFTWARE_VERSION=$(cat $LAST_JIRA_VERSION_FILE)
+
+if [ ! -z "$all" ]
+then
+  python3 $HOME/bin/pollJiraSoftwareVersions.py 
+  exit 0
+fi
 
 latest=$(python3 $HOME/bin/pollJiraSoftwareVersions.py | head -1)
 
