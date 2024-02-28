@@ -37,11 +37,11 @@ CURRENT_JIRA_SOFTWARE_VERSION=$(cat $LAST_JIRA_VERSION_FILE)
 
 if [ ! -z "$all" ]
 then
-  python3 $HOME/bin/pollJiraSoftwareVersions.py 
+  $HOME/bin/pollJiraSoftwareVersions.py 
   exit 0
 fi
 
-latest=$(python3 $HOME/bin/pollJiraSoftwareVersions.py | head -1)
+latest=$($HOME/bin/pollJiraSoftwareVersions.py | head -1)
 
 if [ ! -z "$verbose" ]
 then
