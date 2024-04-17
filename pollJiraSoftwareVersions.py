@@ -7,3 +7,4 @@ for version in json['_embedded']['versions']:
     name=version['name']
     date=version['releaseDate']
     print(name, date)
+
