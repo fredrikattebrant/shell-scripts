@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python3
 import requests
 response = requests.get("https://marketplace.atlassian.com/rest/2/products/key/jira-software/versions")
 json = response.json()
