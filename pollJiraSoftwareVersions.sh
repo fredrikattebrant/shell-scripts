@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Prereq:
-# - Install terminal-notifier using homebrew
+# - Install terminal-notifier using homebrew (if on macOS)
 # - Symlink this script and its companion pollJiraSoftwareVersions.py to $HOME/bin
 # - Optionally run using a crontab entry (here check every weekday at 08:15):
 #
@@ -48,7 +48,10 @@ then
   echo "$latest"
 fi
 
-if [ "${CURRENT_JIRA_SOFTWARE_VERSION}" != "${latest}" ]
-then
-        terminal-notifier -message "Version: $latest" -title "New Jira Software version"
+if [ "${CURRENT_JIRA_SOFTWARE_VERSION}" != "${latest}" ]; then
+  if [ "$(uname)" == "Darwin" ]; then
+    terminal-notifier -message "Version: $latest" -title "New Jira Software version"
+  else
+    echo "Version: $latest"
+  fi
 fi
