@@ -10,7 +10,7 @@
 #set -xv
 
 verbose=""
-
+num_versions=20
 while [ $# -gt 0 ]
 do
   case "$1" in
@@ -20,6 +20,10 @@ do
       ;;
     -v*)
       verbose="true"
+      shift
+      ;;
+    [0-9]*)
+      num_versions=$1
       shift
       ;;
     *)
@@ -37,11 +41,11 @@ CURRENT_JIRA_SOFTWARE_VERSION=$(cat $LAST_JIRA_VERSION_FILE)
 
 if [ ! -z "$all" ]
 then
-  $HOME/bin/pollJiraSoftwareVersions.py 
+  $HOME/bin/pollJiraSoftwareVersions.py -all $num_versions
   exit 0
 fi
 
-latest=$($HOME/bin/pollJiraSoftwareVersions.py | head -1)
+latest=$($HOME/bin/pollJiraSoftwareVersions.py $num_versions | head -1)
 
 if [ ! -z "$verbose" ]
 then
