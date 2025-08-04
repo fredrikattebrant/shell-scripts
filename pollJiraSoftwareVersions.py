@@ -2,6 +2,8 @@
 import requests
 import sys
 
+userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+
 def print_versions(json):
     for version in json['_embedded']['versions']:
         name=version['name']
@@ -9,7 +11,8 @@ def print_versions(json):
         print(name, date)
 
 def poll_versions(url):
-    response = requests.get("https://marketplace.atlassian.com" + url)
+    response = requests.get("https://marketplace.atlassian.com" + url,
+                            headers={"User-Agent": userAgent})
     json = response.json()
     print_versions(json)
     if '_links' in json and 'next' in json['_links']:
