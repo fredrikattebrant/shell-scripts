@@ -32,28 +32,25 @@ do
   esac
 done
 
-# Load token from file when ATLASSIAN_API_TOKEN is not already set.
-if [ -z "$ATLASSIAN_API_TOKEN" ] && [ -n "$ATLASSIAN_API_TOKEN_FILE" ]; then
-  token_file="$ATLASSIAN_API_TOKEN_FILE"
-  case "$token_file" in
-    "~/"*)
-      token_file="$HOME/${token_file#~/}"
-      ;;
-    '$HOME/'*)
-      token_file="$HOME/${token_file#\$HOME/}"
-      ;;
-  esac
-  if [ -r "$token_file" ]; then
-    ATLASSIAN_API_TOKEN=$(tr -d '\r\n' < "$token_file")
-  fi
-fi
+function load_token_from_file {
+  token_file="$1"
 
-if [ -z "$ATLASSIAN_EMAIL" ] || [ -z "$ATLASSIAN_API_TOKEN" ]; then
-  echo "Missing ATLASSIAN_EMAIL or ATLASSIAN_API_TOKEN environment variables."
+  if [ ! -r "$token_file" ]; then
+    echo "Token file not found: $token_file"
+    exit 1
+  fi
+
+  echo $(tr -d '\r\n' < "$token_file")
+}
+
+# Load token from file when ATLASSIAN_API_TOKEN is not already set.
+if [ -z "$ATLASSIAN_EMAIL_FILE" ] || [ -z "$ATLASSIAN_API_TOKEN_FILE" ]; then
+  echo "Missing ATLASSIAN_EMAIL_FILE or ATLASSIAN_API_TOKEN_FILE environment variables."
   exit 1
 fi
 
-export ATLASSIAN_EMAIL ATLASSIAN_API_TOKEN
+export ATLASSIAN_EMAIL=$(load_token_from_file "$ATLASSIAN_EMAIL_FILE")
+export ATLASSIAN_API_TOKEN=$(load_token_from_file "$ATLASSIAN_API_TOKEN_FILE")
 
 LAST_JIRA_VERSION_FILE=$HOME/.jira-sw-version-polled
 PATH=/opt/homebrew/bin:/usr/local/bin:$PATH
