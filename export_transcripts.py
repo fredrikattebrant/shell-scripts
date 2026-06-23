@@ -72,8 +72,8 @@ def main():
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    ap.add_argument("--out", default=os.path.dirname(os.path.abspath(__file__)),
-                    help="output directory (default: script directory)")
+    ap.add_argument("--out", default=os.getcwd(),
+                    help="output directory (default: current directory)")
     ap.add_argument("slugs", nargs="*",
                     help="project slug names or substrings to limit the export")
     a = ap.parse_args()
