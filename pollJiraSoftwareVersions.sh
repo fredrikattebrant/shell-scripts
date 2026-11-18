@@ -53,7 +53,7 @@ export ATLASSIAN_EMAIL=$(load_token_from_file "$ATLASSIAN_EMAIL_FILE")
 export ATLASSIAN_API_TOKEN=$(load_token_from_file "$ATLASSIAN_API_TOKEN_FILE")
 
 LAST_JIRA_VERSION_FILE=$HOME/.jira-sw-version-polled
-PATH=/opt/homebrew/bin:/usr/local/bin:$PATH
+PATH=$HOME/.pyenv/shims:/opt/homebrew/bin:/usr/local/bin:$PATH
 
 touch $LAST_JIRA_VERSION_FILE # create if missing
 
